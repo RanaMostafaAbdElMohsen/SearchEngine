@@ -6,7 +6,9 @@
 package indexer;
 
 import java.io.File;
+import java.nio.file.FileSystemException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -24,7 +26,7 @@ public class Indexer {
     
   //  @SuppressWarnings("empty-statement")
     @SuppressWarnings("empty-statement")
-    public static void main(String[] args) throws FileNotFoundException, IOException {
+    public static void main(String[] args) throws FileNotFoundException,NoSuchFileException, FileSystemException, IOException {
         //Reading Files from Document
 
         File documentsFolder = new File("C:\\Users\\Owner\\Desktop\\Cairo University\\Senior-1\\Advanced Programming Techniques\\Project Modules\\Sample HTML Documents");    
