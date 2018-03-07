@@ -31,27 +31,32 @@ public class Indexer {
 
         File documentsFolder = new File("C:\\Users\\Owner\\Desktop\\Cairo University\\Senior-1\\Advanced Programming Techniques\\Project Modules\\Sample HTML Documents");    
         while(true){
-            while(documentsFolder.list().length==0);
-            for (File file : documentsFolder.listFiles()) { 
-                if(file.exists()){
-                String content = new String(Files.readAllBytes(Paths.get(file.getPath())));
-                Document doc = Jsoup.parse(content);
-                String documentText = doc.body().text();        //To Be Sent to DB
-                String documentHeader = doc.head().text();      //To Be Sent to DB
-                String documentTitle = doc.title();             //To Be Sent to DB
-                System.out.println(documentTitle);
-                System.out.println(documentHeader);
-                ArrayList<String> words = new ArrayList<>();    //To Be Sent to DB
-                String[] strList = documentText.split("\\s+");
-                for( String str : strList){
-                    str = str.replaceAll("[^\\w]", "");
-                    if(!(str.isEmpty())){
-                       // System.out.println(str);
-                        words.add(str);
+            try {
+                while(documentsFolder.list().length==0);
+           
+                for (File file : documentsFolder.listFiles()) {
+                    if(file.exists()){
+                        String content = new String(Files.readAllBytes(Paths.get(file.getPath())));
+                        Document doc = Jsoup.parse(content);
+                        String documentText = doc.body().text();        //To Be Sent to DB
+                        String documentHeader = doc.head().text();      //To Be Sent to DB
+                        String documentTitle = doc.title();             //To Be Sent to DB
+                        System.out.println(documentTitle);
+                        System.out.println(documentHeader);
+                        ArrayList<String> words = new ArrayList<>();    //To Be Sent to DB
+                        String[] strList = documentText.split("\\s+");
+                        for( String str : strList){
+                            str = str.replaceAll("[^\\w]", "");
+                            if(!(str.isEmpty())){
+                                // System.out.println(str);
+                                words.add(str);
+                            }
+                        }
+                        boolean delete = file.delete();
                     }
                 }
-                boolean delete = file.delete();
-                }
+            } catch (FileSystemException ex) {
+              
             }
         }
     }
