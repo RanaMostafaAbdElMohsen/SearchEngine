@@ -109,8 +109,6 @@ public class Indexer {
                                         "VALUES ((Select docid from Documents where URL='" +
                                         strList[0] + "'),(Select docid from Words where Word='"+key+
                                         "'),"+(float)((float)Collections.frequency(words, key)/(float)words.size())+");";
-             System.out.println((float)((float)Collections.frequency(words, key)/(float)words.size()));
-             System.out.println("Word inserted..Count Left = "+ --wordCount);
              ResultSet result = myDatabase.runSql(wordSelectQuery);
              if(result.next()){
                  myDatabase.runSqlQuery(wordUpdateQuery);
@@ -132,12 +130,14 @@ public class Indexer {
         String documentBody = documentText.substring(index, documentText.length()-1);
         ArrayList<String> words = new ArrayList<>();
         String[] strList = documentText.split("\\s+");
-        String decrementWordCountQuery = "UPDATE Words SET Count = Count - 1 "+
-                                        "from Documents,Relations "+
-                                        "where Words.docid = WordID and " +
-                                        "DocID = Documents.docid "+
-                                        "and URL='"+strList[0]+"'; ";
-        myDatabase.runSqlQuery(decrementWordCountQuery);
+        String SelectWordCountQuery ="Select WordID from Relations "+
+                                     "where DocID = (Select docid from Documents where URL = '"+strList[0]+"');";
+        ResultSet rs=myDatabase.runSql(SelectWordCountQuery);
+        while(rs.next())
+        {
+            String updateQueryCount="Update Words SET Count=Count-1 where docid= "+rs.getInt("WordID");
+            myDatabase.runSqlQuery(updateQueryCount);
+        }
         String clearRelationsQuery = "DELETE FROM Relations WHERE DocID = (Select docid from Documents where URL='"+strList[0]+"');";
         myDatabase.runSqlQuery(clearRelationsQuery);
         String clearWordsQuery = "DELETE FROM Words WHERE Count = 0;";
