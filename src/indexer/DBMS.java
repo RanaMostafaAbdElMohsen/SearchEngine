@@ -26,21 +26,23 @@ public class DBMS {
                     conn = DriverManager.getConnection(url);
                     Statement stmt = conn.createStatement();
                     String createDocuments =
-                                "CREATE VIRTUAL TABLE IF NOT EXISTS Documents "+
-                                "USING fts4("+
-                                "URL TEXT NOT NULL, "+
+                                "CREATE TABLE IF NOT EXISTS Documents"+
+                                "("+
+                                "DID INTEGER PRIMARY KEY AUTOINCREMENT, "+
+                                "URL VARCHAR(1000) NOT NULL, "+
                                 "Title TEXT NOT NULL, "+
                                 "Body TEXT NOT NULL);";
                     
                     stmt.execute(createDocuments);
                     
                     String createWords =
-                                "CREATE VIRTUAL TABLE IF NOT EXISTS Words "+
-                                "USING fts4("+
-                                "Word TEXT NOT NULL, "+
+                                "CREATE TABLE IF NOT EXISTS Words"+
+                                "("+
+                                "WID INTEGER PRIMARY KEY AUTOINCREMENT, "+
+                                "Word VARCHAR(50) NOT NULL, "+
+                                "WordStemmed TEXT NOT NULL, "+
                                 "Count INT NOT NULL, "+
-                                "IDFreal FLOAT, "+
-                                "IDFstemmed FLOAT);";
+                                "IDF FLOAT);";
                     
                     stmt.execute(createWords);
                     
@@ -48,10 +50,12 @@ public class DBMS {
                                 "CREATE TABLE IF NOT EXISTS Relations("+
                                 "DocID INT, "+
                                 "WordID INT, "+
+                                "Positions TEXT NOT NULL," +
                                 "TF FLOAT, "+
+                                "Rank FLOAT, "+
                                 "TF_IDF FLOAT, "+
-                                "FOREIGN KEY(DocID) REFERENCES Documents(docid), "+
-                                "FOREIGN KEY(WordID) REFERENCES Words(docid));";
+                                "FOREIGN KEY(DocID) REFERENCES Documents(DID), "+
+                                "FOREIGN KEY(WordID) REFERENCES Words(WID));";
                     
                     stmt.execute(createRelations);
                 }
